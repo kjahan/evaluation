@@ -157,7 +157,9 @@ def run():
     for k in range(1, 11):
         als_perf[k] = metrics.compute_precision_and_recall_at_k(user_recommendations, user_labels, k)
         print("Avergae P@{}: {}% & average Recall@{}: {}%".format(k, round(100*als_perf[k]['avg_p_at_k'], 2), 
-                k, round(100*als_perf[k]['avg_recall_at_k'],2)))
+                k, round(100*als_perf[k]['avg_recall_at_k'], 2)))
+        map_k = metrics.compute_mean_average_precision(user_recommendations, user_labels, k)
+        print("MAP@{}: {}".format(k, round(100*map_k, 2)))
 
 
 if __name__ == "__main__":
