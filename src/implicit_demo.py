@@ -153,12 +153,14 @@ def run():
     print("No of users with recos: {} & no of cold users: {}".format(user_stats['users_w_recos'], user_stats['cold_start_users']))
     # sweep k and get avg p@k and recall@k, MAP, and nDCG
     als_perf = {}
-    for k in range(10, 11):
+    for k in range(1, 11):
         als_perf[k] = metrics.compute_precision_and_recall_at_k(user_recommendations, user_labels, k)
+        als_perf[k]["mean_average_precision"] = metrics.compute_mean_average_precision(user_recommendations, user_labels, k)
+        als_perf[k]["n_dcg"] = metrics.compute_normalized_dcg(user_recommendations, user_labels, k)
         print("Avergae P@{}: {}% & average Recall@{}: {}%".format(k, round(100*als_perf[k]['avg_p_at_k'], 2), 
                 k, round(100*als_perf[k]['avg_recall_at_k'], 2)))
-        # map_k = metrics.compute_mean_average_precision(user_recommendations, user_labels, k)
-        # print("MAP@{}: {}%".format(k, round(100*map_k, 2)))
+        print("MAP@{}: {}%".format(k, round(100*als_perf[k]["mean_average_precision"], 2)))
+        print("nDCG@{}: {}%".format(k, round(100*als_perf[k]["n_dcg"], 2)))
 
 
 if __name__ == "__main__":

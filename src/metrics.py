@@ -54,10 +54,10 @@ def compute_average_precison_for_a_query(recommended_items, actual_items_seen):
     """
     num_rel_items = len(actual_items_seen)
     sum_ave_p = 0
-    for i in range(1, len(recommended_items)):
+    for i in range(0, len(recommended_items)):
         if recommended_items[i] in set(actual_items_seen):
             # item i is relevant
-            p_at_i = len(set(recommended_items[:i]) & set(actual_items_seen))/i
+            p_at_i = len(set(recommended_items[:i+1]) & set(actual_items_seen))/(i+1)
             sum_ave_p += p_at_i
     return sum_ave_p/(num_rel_items)
 
@@ -74,8 +74,6 @@ def compute_mean_average_precision(recommendations, user_labels, n):
                 # grab only the top n recommended items for evaluation
                 recommended_items = [item[0] for item in recommendations[username][:n]]
                 map_ = compute_average_precison_for_a_query(recommended_items, actual_items_seen)
-                print("user: {}, n: {}, map_: {}".format(username, n, map_))
-                print("recommended_items: {}, actual_items_seen: {}".format(recommended_items, actual_items_seen))
                 sum_map += map_
             progress.update(1)
     # compute MAP
@@ -89,10 +87,10 @@ def compute_dcg(recommended_items, actual_items_seen):
     return: Discounted cumulative gain for a query (user/item)
     """
     dcg = 0
-    for i in range(1, len(recommended_items)):
+    for i in range(0, len(recommended_items)):
         if recommended_items[i] in set(actual_items_seen):
             # item i is relevant
-            dcg += 1.0/math.log(i+1, 2)
+            dcg += 1.0/math.log(i+2, 2)
     return dcg
 
 
@@ -113,7 +111,10 @@ def compute_normalized_dcg(recommendations, user_labels, n):
                 diff = list(set(recommended_items) - set(actual_items_seen))
                 ideal_recommended_items = intersections + diff
                 ideal_dcg = compute_dcg(ideal_recommended_items, actual_items_seen)
-                n_dcg = dcg/ideal_dcg
+                try:
+                    n_dcg += dcg/ideal_dcg
+                except ZeroDivisionError:
+                    pass
             progress.update(1)
     # compute normalized DCG
     n_dcg = n_dcg/queries_no
