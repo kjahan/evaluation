@@ -57,3 +57,7 @@ $ conda activate recom
 ```
 $ conda deactivate
 ```
+
+## To run ALS with Movie Lense data and get offline metrics (Precison@k & Recall@k), run:
+
+`python src/implicit_demo.py`
