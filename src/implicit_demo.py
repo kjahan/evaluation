@@ -140,7 +140,7 @@ def run():
     # use the last 30 days as test and anything prior as train dataset 
     spit_date = "2015-03-01 06:40:02.000000"
     train_df, test_df = load_data(fn, data_path, spit_date)
-    # Movielese data is explicit make it implicit
+    # Movielese data is explicit so make it implicit!
     min_rating = 4.0
     model, users, items, ratings = train_als(train_df, test_df, min_rating)
     # Generate ground truth
@@ -150,16 +150,15 @@ def run():
     training_ds = items, users, ratings
     user_recommendations = generate_user_recommendations(model, user_labels, train_users_dict, training_ds)
     user_stats = metrics.compute_basic_stats(user_recommendations, user_labels)
-    print("No of users with recos: {} & no of cold users: {}".format(user_stats['users_w_recos'], 
-            user_stats['cold_start_users']))
-    # sweep k and get avg p@k and recall@k
+    print("No of users with recos: {} & no of cold users: {}".format(user_stats['users_w_recos'], user_stats['cold_start_users']))
+    # sweep k and get avg p@k and recall@k, MAP, and nDCG
     als_perf = {}
-    for k in range(1, 11):
+    for k in range(10, 11):
         als_perf[k] = metrics.compute_precision_and_recall_at_k(user_recommendations, user_labels, k)
         print("Avergae P@{}: {}% & average Recall@{}: {}%".format(k, round(100*als_perf[k]['avg_p_at_k'], 2), 
                 k, round(100*als_perf[k]['avg_recall_at_k'], 2)))
-        map_k = metrics.compute_mean_average_precision(user_recommendations, user_labels, k)
-        print("MAP@{}: {}".format(k, round(100*map_k, 2)))
+        # map_k = metrics.compute_mean_average_precision(user_recommendations, user_labels, k)
+        # print("MAP@{}: {}%".format(k, round(100*map_k, 2)))
 
 
 if __name__ == "__main__":

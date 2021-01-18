@@ -54,32 +54,33 @@ def compute_average_precison_for_a_query(recommended_items, actual_items_seen):
     return: average precision for a query (user/item)
     """
     num_rel_items = len(actual_items_seen)
-    ave_p = 0
+    sum_ave_p = 0
     for i in range(1, len(recommended_items)):
         if recommended_items[i] in set(actual_items_seen):
-            p_at_i = len(set(recommended_items[:i]) & set(actual_items_seen))/i
             # item i is relevant
-            ave_p += p_at_i
-    ave_p = ave_p/(num_rel_items)
-    return ave_p
+            p_at_i = len(set(recommended_items[:i]) & set(actual_items_seen))/i
+            sum_ave_p += p_at_i
+    return sum_ave_p/(num_rel_items)
 
 
 def compute_mean_average_precision(recommendations, user_labels, n):
     """
     return: Mean Average Precision
     """
-    queries_no, mean_average_precision = 0, 0
+    queries_no, sum_map = 0, 0
     with tqdm.tqdm(total=len(user_labels)) as progress:
         for username, actual_items_seen in user_labels.items():
             if username in recommendations:
                 queries_no += 1
                 # grab only the top n recommended items for evaluation
                 recommended_items = [item[0] for item in recommendations[username][:n]]
-                mean_average_precision += compute_average_precison_for_a_query(recommended_items, actual_items_seen)
+                map_ = compute_average_precison_for_a_query(recommended_items, actual_items_seen)
+                print("user: {}, n: {}, map_: {}".format(username, n, map_))
+                print("recommended_items: {}, actual_items_seen: {}".format(recommended_items, actual_items_seen))
+                sum_map += map_
             progress.update(1)
     # compute MAP
-    mean_average_precision = mean_average_precision/queries_no
-    return mean_average_precision
+    return sum_map/queries_no
 
 
 def compute_dcg(recommended_items, actual_items_seen):
