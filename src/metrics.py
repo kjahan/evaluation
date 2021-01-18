@@ -21,7 +21,7 @@ def compute_basic_stats(recommendations, user_labels):
 
 def compute_precision_and_recall_at_k(recommendations, user_labels, k):
     """
-    recommendations: a dictionary for recommendations where keys are user_id and values are list of recommended items
+    recommendations: a dictionary for recommendations where keys are user_id and values are list of tuples consisting recommended items & their relevance scores
     user_labels: a dictionary from username to items a user has actually seen during test period
     k: no of recos per test user
     return: average precision and recall at k
@@ -33,6 +33,7 @@ def compute_precision_and_recall_at_k(recommendations, user_labels, k):
             if username in recommendations:
                 users_no += 1
                 # grab only the top k recommended items for evaluation
+                print(recommendations[username][:k])
                 recommended_items = [item[0] for item in recommendations[username][:k]]
                 # compute p@k
                 sum_p_at_k += len(set(recommended_items) & set(actual_items_seen))/k
