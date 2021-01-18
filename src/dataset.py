@@ -34,6 +34,10 @@ def split(dataframe, split_time):
 
 
 def generate_true_labels(test_df):
+    """
+    test_df: a Pandas dataframe with two columns user_id and item_id
+    return: a dictionary from user_id to items that they have seen
+    """
     user_labels = {}
     with tqdm.tqdm(total=test_df.shape[0]) as progress:
         for index, row in test_df.iterrows():
