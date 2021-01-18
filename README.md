@@ -44,7 +44,7 @@ conda install -c conda-forge ipywidgets -n recom
 jupyter nbextension enable --py widgetsnbextension
 ```
 
-## To activate conda environment, run:
+## Activate conda env:
 
 ```
 $ conda activate recom
@@ -52,12 +52,17 @@ $ conda activate recom
 (On MacOS: `unset PYTHONPATH`)
 
 
-## To deactivae conda environment:
+## Deactivae conda env:
 
 ```
 $ conda deactivate
 ```
 
-## To run ALS with Movie Lense data and get offline metrics (Precison@k & Recall@k), run:
+## Run tests:
+
+`pytest`
+
+## ALS with MovieLens Demo:
+To run ALS with Movie Lense data and get offline metrics (Precison@k & Recall@k), run:
 
 `python src/implicit_demo.py`
