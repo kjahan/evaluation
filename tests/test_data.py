@@ -1,7 +1,7 @@
 from datetime import datetime
 import pandas as pd
 
-from src.data import split
+from src.dataset import split
 
 
 def test_split():
