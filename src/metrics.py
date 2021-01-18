@@ -34,7 +34,6 @@ def compute_precision_and_recall_at_k(recommendations, user_labels, k):
             if username in recommendations:
                 users_no += 1
                 # grab only the top k recommended items for evaluation
-                print(recommendations[username][:k])
                 recommended_items = [item[0] for item in recommendations[username][:k]]
                 # compute p@k
                 sum_p_at_k += len(set(recommended_items) & set(actual_items_seen))/k
